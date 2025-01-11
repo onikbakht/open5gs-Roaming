@@ -25,7 +25,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - nrf.5gc.mnc001.mcc001.3gppnetwork.org
+          - nrf.5gc.mnc003.mcc262.3gppnetwork.org
     configs:
       - source: h-nrf_config
         target: /etc/open5gs/custom/nrf.yaml
@@ -42,7 +42,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - ausf.5gc.mnc001.mcc001.3gppnetwork.org
+          - ausf.5gc.mnc003.mcc262.3gppnetwork.org
     configs:
       - source: h-ausf_config
         target: /etc/open5gs/custom/ausf.yaml
@@ -61,7 +61,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - udm.5gc.mnc001.mcc001.3gppnetwork.org
+          - udm.5gc.mnc003.mcc262.3gppnetwork.org
     configs:
       - source: h-udm_config
         target: /etc/open5gs/custom/udm.yaml
@@ -81,7 +81,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - udr.5gc.mnc001.mcc001.3gppnetwork.org
+          - udr.5gc.mnc003.mcc262.3gppnetwork.org
     configs:
       - source: h-udr_config
         target: /etc/open5gs/custom/udr.yaml
@@ -102,7 +102,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - sepp.5gc.mnc001.mcc001.3gppnetwork.org
+          - sepp.5gc.mnc003.mcc262.3gppnetwork.org
     configs:
       - source: h-sepp_config
         target: /etc/open5gs/custom/sepp.yaml
@@ -121,7 +121,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - nrf.5gc.mnc070.mcc999.3gppnetwork.org
+          - nrf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-nrf_config
         target: /etc/open5gs/custom/nrf.yaml
@@ -138,10 +138,29 @@ services:
     networks:
       open5gs:
         aliases:
-          - ausf.5gc.mnc070.mcc999.3gppnetwork.org
+          - ausf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-ausf_config
         target: /etc/open5gs/custom/ausf.yaml
+    depends_on:
+      - v-nrf
+
+  v-sepp:
+    container_name: v-sepp
+    image: "sepp:${OPEN5GS_VERSION}"
+    build:
+      context: ../../images/sepp
+      args:
+        - OPEN5GS_VERSION=${OPEN5GS_VERSION}
+        - UBUNTU_VERSION=${UBUNTU_VERSION}
+    command: "-c /etc/open5gs/custom/sepp.yaml"
+    networks:
+      open5gs:
+        aliases:
+          - sepp.5gc.mnc002.mcc262.3gppnetwork.org
+    configs:
+      - source: v-sepp_config
+        target: /etc/open5gs/custom/sepp.yaml
     depends_on:
       - v-nrf
 
@@ -157,7 +176,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - nssf.5gc.mnc070.mcc999.3gppnetwork.org
+          - nssf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-nssf_config
         target: /etc/open5gs/custom/nssf.yaml
@@ -176,7 +195,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - bsf.5gc.mnc070.mcc999.3gppnetwork.org
+          - bsf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-bsf_config
         target: /etc/open5gs/custom/bsf.yaml
@@ -196,7 +215,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - pcf.5gc.mnc070.mcc999.3gppnetwork.org
+          - pcf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-pcf_config
         target: /etc/open5gs/custom/pcf.yaml
@@ -215,7 +234,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - amf.5gc.mnc070.mcc999.3gppnetwork.org
+          - amf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-amf_config
         target: /etc/open5gs/custom/amf.yaml
@@ -234,7 +253,7 @@ services:
     networks:
       open5gs:
         aliases:
-          - smf.5gc.mnc070.mcc999.3gppnetwork.org
+          - smf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-smf_config
         target: /etc/open5gs/custom/smf.yaml
@@ -254,33 +273,13 @@ services:
     networks:
       open5gs:
         aliases:
-          - upf.5gc.mnc070.mcc999.3gppnetwork.org
+          - upf.5gc.mnc002.mcc262.3gppnetwork.org
     configs:
       - source: v-upf_config
         target: /etc/open5gs/custom/upf.yaml
     privileged: true
     cap_add:
       - NET_ADMIN
-
-  v-sepp:
-    container_name: v-sepp
-    image: "sepp:${OPEN5GS_VERSION}"
-    build:
-      context: ../../images/sepp
-      args:
-        - OPEN5GS_VERSION=${OPEN5GS_VERSION}
-        - UBUNTU_VERSION=${UBUNTU_VERSION}
-    command: "-c /etc/open5gs/custom/sepp.yaml"
-    restart: unless-stopped
-    networks:
-      open5gs:
-        aliases:
-          - sepp.5gc.mnc070.mcc999.3gppnetwork.org
-    configs:
-      - source: v-sepp_config
-        target: /etc/open5gs/custom/sepp.yaml
-    depends_on:
-      - v-nrf
 
   packetrusher:
     container_name: packetrusher
@@ -298,6 +297,7 @@ services:
       - ALL
     depends_on:
       - v-amf
+
 
 networks:
   open5gs:
@@ -334,6 +334,8 @@ configs:
     file: ../../configs/roaming/v-nrf.yaml
   v-ausf_config:
     file: ../../configs/roaming/v-ausf.yaml
+  v-sepp_config:
+    file: ../../configs/roaming/v-sepp.yaml
   v-nssf_config:
     file: ../../configs/roaming/v-nssf.yaml
   v-bsf_config:
@@ -346,7 +348,6 @@ configs:
     file: ../../configs/roaming/v-smf.yaml
   v-upf_config:
     file: ../../configs/roaming/v-upf.yaml
-  v-sepp_config:
-    file: ../../configs/roaming/v-sepp.yaml
   packetrusher_config:
     file: ../../configs/roaming/packetrusher.yaml
+
