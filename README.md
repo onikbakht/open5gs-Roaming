@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Open5GS 5G Core in Docker
 
 [Open5GS](https://github.com/open5gs/open5gs) 5G Core Network Functions images ready for Docker.
@@ -182,3 +183,30 @@ The `basic` deployment is prepared to work with external gNBs, exposing:
 It also exposes the MongoDB database using `TCP port 27017`.
 
 Check `docs/` to see the full documentation for the different deployments.
+=======
+# open5gs-Roaming
+
+containers specification edited according to the Roaming architecture, docker compose edited also to get all needed containers run
+
+----------------------------------------------------------------
+
+
+***useful commands:
+
+*command for docker compose file to get all needed containers to run :
+
+- docker-compose --env-file C:\Users\omiid\docker-open5gs\.env up -d
+(edit the path accoding to your own pc directories ofcource !)
+(-d switsch lets the containers to run in background so that you can still use your command line)
+
+*command to see the running containers:
+- docker-compose ps
+
+*command ti bring down the containers which ran up with docker compose:
+- docker-compose down
+
+*command to read some general logs : 
+- docker-compose logs
+  
+
+>>>>>>> 6040e6199bb6967a13ac30da69c21db755b18a51
